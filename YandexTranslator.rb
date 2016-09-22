@@ -26,10 +26,10 @@ class YandexTranslator
 	end
 	def getlangs(uilang)
 		request = Net::HTTP::Post.new('/api/v1.5/tr/getLangs')
-		request.set_form_data({key:@key,ui:ui}) 
+		request.set_form_data({key:@key,ui:uilang}) 
 		tmp=scan(@http.request(request).body,/(?<=<Item).*(?=\/><\/langs)/)
 		if tmp
-			tmp.split('/><Item').map{|x| Hash[x[/(?<=key=")\S*(?=")/].to_sym,x[/(?<=value=").*(?=")/]]} 
+			tmp.split('/><Item').map{|x| [x[/(?<=key=")\S*(?=")/],x[/(?<=value=").*(?=")/]]} 
 		else 
 			raise ArgumentError,"Parameter 'ui' is invalid" 
 		end
