@@ -8,14 +8,14 @@ class YandexTranslator
 		@http.use_ssl = true
  		@http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 	end
-	def translate(text,lang)#,format,options
+	def translate(text,lang,format=nil,options=nil)#,format,options
 		request = Net::HTTP::Post.new('/api/v1.5/tr/translate')
-		request.set_form_data({key:@key,text:text,lang:lang}) 
+		request.set_form_data({key:@key,text:text,lang:lang,format:format,options:options}) 
 		@http.request(request).body
 	end
-	def detect(text)#,hint
+	def detect(text,hint=nil)#,hint
 		request = Net::HTTP::Post.new('/api/v1.5/tr/detect')
-		request.set_form_data({key:@key,text:text}) 
+		request.set_form_data({key:@key,text:text,hint:hint}) 
 		@http.request(request).body
 	end
 	def getlangs(ui)
@@ -25,6 +25,6 @@ class YandexTranslator
 	end
 end
 tr=YandexTranslator.new('trnsl.1.1.20160907T145726Z.184b07fb1c05d3de.bf989596de0117c3f66b2af3204496f9bdf642ee')
-puts tr.translate('hell','')
+puts tr.translate('hell','ru')
 #puts tr.getlangs('mn')
 #puts tr.detect 'bonjour'
