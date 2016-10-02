@@ -1,39 +1,6 @@
-class YandexError < RuntimeError
-  def initialize(mes,code)
-    super(mes)
-    @code = code
-  end
-
-  def code
-    @code
-  end
-end
-
+require_relative 'Connection.rb'
+require_relative 'YandexError.rb'
 class YandexTranslator
-    require 'net/http'
-    require 'openssl'
-    require 'json'
-
-    class Connection
-      def initialize(key)
-        @key = key
-        @http = Net::HTTP.new('translate.yandex.net', 443)
-        @http.use_ssl = true
-        @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
-
-      def request(path, parameters)
-        request = Net::HTTP::Post.new("/api/v1.5/tr.json/#{path}")
-        request.set_form_data({key:@key}.merge(parameters)) 
-        tmp = JSON.parse(@http.request(request).body)
-        if (tmp['code'] == nil) || (tmp['code'] == 200)
-          tmp
-        else
-          raise YandexError.new(tmp['message'], tmp['code'])
-        end
-      end
-    end
-
     def initialize(apikey)
         @con = Connection.new(apikey)     
     end
@@ -50,3 +17,5 @@ class YandexTranslator
       @con.request('getLangs', {ui:uilang})        
     end
 end
+tr=YandexTranslator.new('trnsl.1.1.20160907T145726Z.184b07fb1c05d3de.bf989596de0117c3f66b2af3204496f9bdf642ee')
+puts tr.getlangs('ru')
